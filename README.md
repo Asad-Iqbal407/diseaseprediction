@@ -70,6 +70,30 @@ The system uses comprehensive medical datasets containing:
    http://localhost:5000
    ```
 
+## Vercel Deployment
+
+This repository is configured for Vercel with:
+
+- `api/index.py` as the Vercel Python entrypoint
+- `vercel.json` routes and function configuration
+- `requirements.txt` pinned to model-compatible versions
+
+### Deploy steps
+
+1. Install Vercel CLI:
+   ```bash
+   npm install -g vercel
+   ```
+2. Login and link project:
+   ```bash
+   vercel login
+   vercel
+   ```
+3. Production deploy:
+   ```bash
+   vercel --prod
+   ```
+
 ## 📱 Usage
 
 1. **Enter Symptoms**: Type your symptoms separated by commas (e.g., "fever, headache, nausea")

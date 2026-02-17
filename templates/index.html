@@ -3,171 +3,385 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Health Care Center</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <title>Disease Prediction System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Fraunces:opsz,wght@9..144,600&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg-top: #f2f7ff;
+            --bg-bottom: #e7eff6;
+            --panel: #ffffff;
+            --panel-soft: #f8fbff;
+            --ink: #1a2235;
+            --muted: #56627a;
+            --line: #d8e2f1;
+            --brand: #1f6feb;
+            --brand-strong: #0d4fb3;
+            --accent: #ef8b2c;
+            --danger: #b42318;
+            --radius: 14px;
+            --shadow: 0 8px 28px rgba(16, 33, 66, 0.12);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            background-image: url('static/bgCover.jpg');
-            background-size: cover;
-            background-position: center;
-            background-color: rgba(0, 0, 0, 0.15);
-            background-blend-mode: overlay;
+            margin: 0;
+            color: var(--ink);
+            font-family: "Space Grotesk", "Segoe UI", sans-serif;
+            background: linear-gradient(170deg, var(--bg-top), var(--bg-bottom));
+            min-height: 100vh;
         }
-        .logo {
-            width: 100%;
-            height: 50px;
-            color: white;
-            margin-top: 0;
-            margin-bottom: 0;
-            margin-left: 10px;
+
+        .page {
+            width: min(1280px, 95%);
+            margin: 22px auto 30px;
+            display: grid;
+            gap: 16px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .panel {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 18px;
+        }
+
+        .hero {
+            background:
+                radial-gradient(circle at 82% -10%, rgba(31, 111, 235, 0.18), transparent 38%),
+                radial-gradient(circle at 8% 120%, rgba(239, 139, 44, 0.2), transparent 45%),
+                var(--panel);
+        }
+
+        .title {
+            margin: 0;
+            font-family: "Fraunces", serif;
+            font-size: clamp(1.4rem, 2.8vw, 2rem);
+            letter-spacing: 0.1px;
+        }
+
+        .subtitle {
+            margin: 8px 0 0;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        .stats {
+            margin-top: 16px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 10px;
+        }
+
+        .stat {
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            background: var(--panel-soft);
+            padding: 10px 12px;
+        }
+
+        .stat-value {
+            font-size: 1.35rem;
+            font-weight: 700;
+            line-height: 1.1;
+        }
+
+        .stat-label {
+            color: var(--muted);
+            font-size: 0.8rem;
+        }
+
+        .mini-title {
+            margin: 0 0 6px;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .steps {
+            margin: 10px 0 0;
+            padding-left: 18px;
+            color: var(--muted);
+            line-height: 1.55;
+        }
+
+        .actions {
             display: flex;
+            justify-content: space-between;
             align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
         }
-        .myimg {
-            width: 50px;
-            height: 50px;
-            margin-right: 10px;
-            padding: 5px;
+
+        .actions h2 {
+            margin: 0;
+            font-size: 1.1rem;
         }
-        .container {
-            background-color: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 40px;
+
+        .helper {
+            margin: 0;
+            color: var(--muted);
+            font-size: 0.92rem;
         }
-        .title-symptoms {
-            color: black;
-            margin-bottom: 20px;
-            margin-left: 3px;
-        }
-        .message-text {
-            color: red;
-        }
+
         .btn {
-            background-color: rgba(16, 4, 95, 0.7);
-            backdrop-filter: blur(5px);
-            border: none;
-            border-radius: 8px;
-            padding: 10px;
-            color: white;
+            border: 0;
+            border-radius: 10px;
+            font-family: inherit;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.15s ease, opacity 0.15s ease;
         }
+
         .btn:hover {
-            background-color: rgba(16, 4, 95, 0.4);
-            color: white;
+            transform: translateY(-1px);
+            opacity: 0.95;
         }
-        .footer {
-            background-color: rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(10px);
-            padding: 10px;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
+
+        .btn-reset {
+            padding: 8px 12px;
+            background: #eef3ff;
+            color: var(--ink);
+            border: 1px solid var(--line);
+        }
+
+        .btn-submit {
+            margin-top: 12px;
+            padding: 11px 18px;
+            background: linear-gradient(120deg, var(--brand), var(--brand-strong));
+            color: #fff;
+        }
+
+        .symptom-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 8px 14px;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 12px;
+            background: var(--panel-soft);
+        }
+
+        .symptom-item {
             display: flex;
-            flex-direction: row;
+            gap: 8px;
+            align-items: flex-start;
+            margin: 0;
+            font-size: 0.9rem;
+            color: #24324f;
+        }
+
+        .symptom-item input {
+            margin-top: 2px;
+            accent-color: var(--brand);
+        }
+
+        .message {
+            margin: 10px 0 0;
+            color: var(--danger);
+            font-weight: 600;
+        }
+
+        .result-head {
+            margin: 0 0 8px;
+            font-size: 1.15rem;
+        }
+
+        .result-note {
+            margin: 4px 0;
+            color: var(--muted);
+        }
+
+        .result-highlight {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 999px;
+            border: 1px solid var(--line);
+            background: #f3f8ff;
+            font-weight: 700;
+            color: #18345f;
+        }
+
+        .description-box {
+            border: 1px solid var(--line);
+            background: #fbfdff;
+            border-radius: 12px;
+            padding: 10px 12px;
+            margin-top: 10px;
+            line-height: 1.5;
+        }
+
+        .result-grid {
+            margin-top: 12px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 12px;
+        }
+
+        .result-card {
+            border: 1px solid var(--line);
+            background: #f8fbff;
+            border-radius: 12px;
+            padding: 10px 12px;
+        }
+
+        .result-card h3 {
+            margin: 0 0 8px;
+            font-size: 1rem;
+        }
+
+        .result-card ul {
+            margin: 0;
+            padding-left: 18px;
+            line-height: 1.5;
+            color: #30405f;
+        }
+
+        .footer-note {
+            color: var(--muted);
+            font-size: 0.84rem;
+            text-align: center;
+            margin-top: 3px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .panel {
+                padding: 14px;
+            }
+
+            .symptom-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="background-color: rgba(0, 0, 0, 0.35); background-blend-mode: overlay; background-image: linear-gradient(to bottom, #10045F, #3424A1); box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15);">
-    <div class="container-fluid">
-        <div class="logo">
-            <img class="myimg" src="static/img.png" alt="Logo">
-            <h5 class="titleName">Disease Prediction and Medical Recommendation System</h5>
-        </div>
-        <a class="navbar-brand" href="" id="resetButton">Reset</a>
-        </button>
-    </div>
-</nav>
+    <main class="page">
+        <section class="panel hero">
+            <h1 class="title">Disease Prediction and Medical Recommendation System</h1>
+            <p class="subtitle">This tool predicts the most likely disease from selected symptoms and then provides description, precautions, medications, diet, and workout guidance.</p>
 
-<!-- main form of page -->
-<div class="container my-4 mt-4 bg-glass p-4 rounded">
-    <form action="/predict" method="post">
-        <div class="form-group">
-            <label for="symptoms" class="title-symptoms" style="margin-bottom:10px">Type your symptoms:</label>
-            <input type="text" class="form-control" id="symptoms" name="symptoms" placeholder="Type symptoms such as headache, mild fever, acidity, etc...">
-        </div>
-        <br>
-        {% if message %}
-        <p class="message-text">{{ message }}</p>
+            <div class="stats">
+                <article class="stat">
+                    <div class="stat-value">{{ disease_count }}</div>
+                    <div class="stat-label">Diseases Supported</div>
+                </article>
+                <article class="stat">
+                    <div class="stat-value">{{ symptom_count }}</div>
+                    <div class="stat-label">Symptoms Available</div>
+                </article>
+                <article class="stat">
+                    <div class="stat-value">{{ model_name }}</div>
+                    <div class="stat-label">Prediction Model</div>
+                </article>
+            </div>
+
+            <h2 class="mini-title" style="margin-top:16px;">How Prediction Works</h2>
+            <ol class="steps">
+                <li>You select symptoms from the checklist.</li>
+                <li>The app converts selections into a binary symptom vector.</li>
+                <li>The trained model predicts the likely disease.</li>
+                <li>The app shows mapped recommendations from the dataset.</li>
+            </ol>
+        </section>
+
+        <section class="panel">
+            <form action="/" method="post">
+                <div class="actions">
+                    <div>
+                        <h2>Select Symptoms</h2>
+                        <p class="helper">All symptoms are listed below. Select every symptom currently present.</p>
+                    </div>
+                    <a href="/" class="btn btn-reset">Reset</a>
+                </div>
+
+                <div class="symptom-grid">
+                    {% for symptom in symptom_options %}
+                    <label class="symptom-item">
+                        <input type="checkbox" name="selected_symptoms" value="{{ symptom }}"
+                            {% if symptom in selected_symptoms %}checked{% endif %}>
+                        <span>{{ symptom|title }}</span>
+                    </label>
+                    {% endfor %}
+                </div>
+
+                {% if message %}
+                <p class="message">{{ message }}</p>
+                {% endif %}
+
+                <button type="submit" class="btn btn-submit">Predict Disease</button>
+            </form>
+        </section>
+
+        {% if predicted_disease %}
+        <section class="panel">
+            <h2 class="result-head">Prediction Result</h2>
+            <p class="result-note">Predicted Disease: <span class="result-highlight">{{ predicted_disease }}</span></p>
+            <p class="result-note">Symptoms Used: {{ symptoms|join(', ') }}</p>
+
+            <div class="description-box">
+                <strong>Description:</strong> {{ dis_des or "Description not available." }}
+            </div>
+
+            <div class="result-grid">
+                <article class="result-card">
+                    <h3>Precautions</h3>
+                    <ul>
+                        {% for item in my_precautions %}
+                        <li>{{ item }}</li>
+                        {% endfor %}
+                    </ul>
+                </article>
+                <article class="result-card">
+                    <h3>Medications</h3>
+                    <ul>
+                        {% for item in medications %}
+                        <li>{{ item }}</li>
+                        {% endfor %}
+                    </ul>
+                </article>
+                <article class="result-card">
+                    <h3>Diet</h3>
+                    <ul>
+                        {% for item in my_diet %}
+                        <li>{{ item }}</li>
+                        {% endfor %}
+                    </ul>
+                </article>
+                <article class="result-card">
+                    <h3>Workout</h3>
+                    <ul>
+                        {% for item in workout %}
+                        <li>{{ item }}</li>
+                        {% endfor %}
+                    </ul>
+                </article>
+            </div>
+        </section>
         {% endif %}
-        <br>
-        <div class="d-flex justify-content-center">
-            <button type="submit" class="btn btn-danger btn-lg" style="width: 30%; padding: 14px; margin-bottom: 5px;">Predict</button>
-        </div>
-    </form>
-</div>
 
-{% if predicted_disease %}
-<!-- Results -->
-<h4 class="text-center my-4 mt-4">Predicted Results:</h4>
-<div class="container my-4 mt-4">
-    <table class="table">
-        <thead>
-            <tr>
-                <h6>Showing predictions for {{symptoms}}</h6>
-            </tr>
-        </thead>
-        <thead>
-            <tr>
-                <th scope="col">Disease</th>
-                <th scope="col">{{predicted_disease}}</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <th>Description</th>
-                <td>{{ dis_des }}</td>
-            </tr>
-            <tr>
-                <th>Precautions</th>
-                <td>
-                    <ul>
-                        {% for i in my_precautions %}
-                            <li>{{ i }}</li>
-                        {% endfor %}
-                    </ul>
-                </td>
-            </tr>
-            <tr>
-                <th>Medications</th>
-                <td>
-                    <ul>
-                        {% for i in medications %}
-                            <li>{{ i }}</li>
-                        {% endfor %}
-                    </ul>
-                </td>
-            </tr>
-            <tr>
-                <th>Workout</th>
-                <td>
-                    <ul>
-                        {% for i in workout %}
-                            <li>{{ i }}</li>
-                        {% endfor %}
-                    </ul>
-                </td>
-            </tr>
-            <tr>
-                <th>Diet</th>
-                <td>
-                    <ul>
-                        {% for i in my_diet %}
-                            <li>{{ i }}</li>
-                        {% endfor %}
-                    </ul>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-{% endif %}
-
-<div class="footer">
-    <h6 class="mt-1 my-1 text-center text-green"><i>Machine Learning Project By: Tanmay Pramanick, Kunal Rajput, Soham Sonar </i></h6>
-</div>
-
+        <p class="footer-note">For educational use only. Not a replacement for medical diagnosis.</p>
+    </main>
 </body>
 </html>
