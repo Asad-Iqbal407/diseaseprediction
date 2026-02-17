@@ -94,6 +94,21 @@ This repository is configured for Vercel with:
    vercel --prod
    ```
 
+## Render Deployment
+
+This repository is also optimized for Render.
+
+- `render.yaml` defines build/start commands and health check path.
+- `Procfile` includes a production `gunicorn` command.
+- `/healthz` endpoint is available for service health checks.
+
+### Deploy on Render
+
+1. Push code to GitHub.
+2. In Render, create a new **Web Service** from this repo.
+3. Render will detect `render.yaml` automatically.
+4. Deploy and access the generated Render URL.
+
 ## 📱 Usage
 
 1. **Enter Symptoms**: Type your symptoms separated by commas (e.g., "fever, headache, nausea")

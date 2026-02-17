@@ -125,6 +125,38 @@ MEDICATIONS_BY_DISEASE = load_list_map("medications.csv", "Medication")
 DIETS_BY_DISEASE = load_list_map("diets.csv", "Diet")
 WORKOUT_BY_DISEASE = load_workout_map()
 KNOWN_SYMPTOMS = set(SYMPTOM_OPTIONS)
+TRAINING_ROWS = sum(DISEASE_COUNTS.values())
+
+
+def build_prediction_model():
+    model = {}
+    disease_total = len(DISEASE_COUNTS)
+    if disease_total == 0 or TRAINING_ROWS == 0:
+        return model
+
+    for disease, disease_count in DISEASE_COUNTS.items():
+        score_baseline = math.log((disease_count + 1) / (TRAINING_ROWS + disease_total))
+        symptom_score_delta = {}
+        symptom_counts = DISEASE_SYMPTOM_COUNTS[disease]
+
+        for symptom in SYMPTOM_OPTIONS:
+            present_probability = (symptom_counts.get(symptom, 0) + 1) / (disease_count + 2)
+            present_probability = max(min(present_probability, 1 - 1e-9), 1e-9)
+            absent_log = math.log(1 - present_probability)
+            present_log = math.log(present_probability)
+
+            score_baseline += absent_log
+            symptom_score_delta[symptom] = present_log - absent_log
+
+        model[disease] = {
+            "baseline": score_baseline,
+            "delta": symptom_score_delta,
+        }
+
+    return model
+
+
+PREDICTION_MODEL = build_prediction_model()
 
 
 def clean_selected_symptoms(raw_symptoms):
@@ -137,26 +169,18 @@ def clean_selected_symptoms(raw_symptoms):
 
 
 def predict_disease(selected_symptoms):
-    if not DISEASE_COUNTS:
+    if not PREDICTION_MODEL:
         return ""
 
     selected_set = set(selected_symptoms)
-    disease_total = len(DISEASE_COUNTS)
-    training_rows = sum(DISEASE_COUNTS.values())
     best_disease = ""
     best_score = float("-inf")
 
-    for disease, disease_count in DISEASE_COUNTS.items():
-        score = math.log((disease_count + 1) / (training_rows + disease_total))
-        symptom_counts = DISEASE_SYMPTOM_COUNTS[disease]
-
-        for symptom in SYMPTOM_OPTIONS:
-            present_probability = (symptom_counts.get(symptom, 0) + 1) / (disease_count + 2)
-            present_probability = max(min(present_probability, 1 - 1e-9), 1e-9)
-            if symptom in selected_set:
-                score += math.log(present_probability)
-            else:
-                score += math.log(1 - present_probability)
+    for disease, config in PREDICTION_MODEL.items():
+        score = config["baseline"]
+        delta = config["delta"]
+        for symptom in selected_set:
+            score += delta.get(symptom, 0.0)
 
         if score > best_score:
             best_score = score
@@ -216,6 +240,11 @@ def index():
 @app.route("/predict", methods=["POST"])
 def predict():
     return index()
+
+
+@app.route("/healthz", methods=["GET"])
+def healthz():
+    return {"status": "ok"}, 200
 
 
 if __name__ == "__main__":
