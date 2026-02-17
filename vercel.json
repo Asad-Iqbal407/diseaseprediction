@@ -2,9 +2,13 @@
   "version": 2,
   "functions": {
     "api/index.py": {
-      "runtime": "python3.11", 
       "maxDuration": 30,
-      "includeFiles": "templates/**, static/**, dataset/**, model/**"
+      "includeFiles": [
+        "templates/**",
+        "static/**",
+        "dataset/**",
+        "model/**"
+      ]
     }
   },
   "routes": [
