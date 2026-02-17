@@ -76,7 +76,7 @@ This repository is configured for Vercel with:
 
 - `api/index.py` as the Vercel Python entrypoint
 - `vercel.json` routes and function configuration
-- `requirements.txt` pinned to model-compatible versions
+- lightweight `requirements.txt` to stay within Vercel Serverless size limits
 
 ### Deploy steps
 
